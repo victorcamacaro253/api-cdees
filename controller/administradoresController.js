@@ -138,10 +138,54 @@ const deleteAdministrador = async (req,res) =>{
  }
 }
 
+
+
+const  changePassword = async (req,res) =>{
+    const {id} = req.params;
+   const {oldPassword,newPassword}= req.body
+
+    //validar que los campos no esten vacios
+    if ( !oldPassword || !newPassword) {
+        return res.status(400).json({ error: 'Todos los campos son requeridos' });
+
+    }
+
+    try {
+        const result = await administradoresModel.getAdministradorById(id);
+        const user=result;
+
+        if (!user) {
+            return res.status(404).json({error:'usuario no encontrado'})
+            
+        }
+
+
+        const match = await compare(oldPassword, user.Password);
+        
+        if(!match){
+            return res.status(404).json({error:'contraseña actual incorrecta'})
+        }
+
+        const hashedNewPassword = await hash(newPassword,10)
+
+        await administradoresModel.updatePassword(id,hashedNewPassword)
+
+        return res.status(200).json({message:'Contraseña actualizada con exito'})
+
+    } catch (error) {
+        console.error('Error interno del servidor :', error);
+        return res.status(500).json({error:'Error del servidor'})
+
+    }
+
+}
+
+
 export default {
 
     getAllAdministradores,
     login,
     addAdministrador,
-    deleteAdministrador
+    deleteAdministrador,
+    changePassword
 }
