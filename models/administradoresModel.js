@@ -1,4 +1,6 @@
+import { update } from 'firebase/database';
 import { query as _query,pool } from '../db/db.js';
+import { updatePassword } from 'firebase/auth';
 
 const administradoresModel={
 
@@ -6,6 +8,16 @@ const administradoresModel={
     async getAllAdministradores(){
         const results = await _query('SELECT * FROM administradores');
         return results;
+    },
+
+    async getAdministradorById(id){
+        try {
+            const [rows] = await pool.query("SELECT * FROM administradores WHERE Id = ?", [id]);
+            return rows.length > 0 ? rows[0] : null;
+        } catch (err) {
+            console.error('Error en la búsqueda de usuario:', err);
+            throw err; // Lanzar error para ser manejado en el controlador
+        }
     },
 
     async findByUsername(username){
@@ -46,6 +58,12 @@ const administradoresModel={
         return result.affectedRows;
     },
 
+     async updatePassword(newPassword,id){
+        const result ='UPDATE administradores SET Password = ? WHERE Id = ?';
+        const values= [newPassword,id];
+        const rows = await _query(result,values);
+        return rows;
+     }
 
 }
  export default administradoresModel;
