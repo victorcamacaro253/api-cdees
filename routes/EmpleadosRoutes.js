@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import empleadosController from '../controller/EmpleadosController.js';
+import authenticateToken from '../middleware/authenticationToken.js';
+
 
 const router = Router();
 
