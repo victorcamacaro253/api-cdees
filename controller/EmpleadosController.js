@@ -7,6 +7,13 @@ const getAllEmpleados = async (req, res) => {
     res.header('Access-Control-Allow-Origin','*')
     try {
         const results = await empleadosModel.getAllEmpleados();
+
+          
+        if (results.length === 0) {
+            // Si no hay empleados, devolvemos un 404
+            return res.status(404).json({ error: 'No se encontraron empleados' });
+        }
+
         res.json(results);
 
     } catch (err) {
@@ -20,6 +27,13 @@ const getEmpleadoById = async (req,res) =>{
 
     try{
         const results = await empleadosModel.getEmpleadoById(id);
+
+
+    // Verificamos si no se encontró ningún empleado
+    if (!results || results.length === 0) {
+        return res.status(404).json({ error: 'Empleado no encontrado' });
+    }
+
         res.json(results);
 
     }catch(error){
@@ -38,6 +52,24 @@ const getEmpleadosActivos = async  (req,res) =>{
         console.error('Error ejecutando la consulta:', error);
         res.status(500).json({ error: 'Error interno del servidor 1' });
     }
+}
+
+const getEmpleadoByName= async (req,res)=>{
+const {nombre}= req.query;
+console.log(nombre)
+try{
+    const result = await empleadosModel.getEmpleadoByName(nombre);
+   // Verificamos si no se encontró ningún empleado
+   if (result.length === 0) {
+    return res.status(404).json({ error: 'Empleado no encontrado' });
+}
+
+    res.json(result)
+
+}catch(error){
+    console.error('Error ejecutando la consulta:', error);
+    res.status(500).json({ error: 'Error interno del servidor 1' });
+}
 }
 
   
@@ -184,7 +216,8 @@ export default {
     updateEmpleado,
     deleteEmpleado,
     addEmpleado,
-    checkUserExists
+    checkUserExists,
+    getEmpleadoByName
 
 
 
