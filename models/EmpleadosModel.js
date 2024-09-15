@@ -46,6 +46,13 @@ const empleadosModel = {
     async deleteEmpleado(id){
         const result= await _query('DELETE FROM empleados WHERE id_empleado=?',[id]);
         return result.affectedRows;
+    },
+
+    async getEmpleadoByName(nombre){
+        const result= await _query('SELECT id_empleado,Primer_nombre,Primer_apellido,cedula,Correo_electronico,telefono,Cargo,estatus,imagen FROM empleados INNER JOIN cargos ON empleados.Id_cargo=cargos.Id_cargo WHERE Primer_nombre= ? ',
+        [nombre])
+        return  result;
+
     }
 }
 
