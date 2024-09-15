@@ -13,14 +13,23 @@ router.get('/empleados',empleadosController.getAllEmpleados);
 router.get('/empleados/activo',empleadosController.getEmpleadosActivos)
 
 
+//Ruta para obtener los empleados por nombre
+router.get('/empleados/nombre',empleadosController.getEmpleadoByName);
 
 //Ruta para obtener todos los empleados por id
 router.get('/empleados/:id',empleadosController.getEmpleadoById)
 
+
+
 //Ruta para actualizar el empleado 
 router.put('/empleados/:id',empleadosController.updateEmpleado)
 
+//Ruta para agregar un empleado
+
 router.post('/empleados',empleadosController.checkUserExists,empleadosController.addEmpleado)
+
+//Ruta  para eliminar un empleado
+
 
 router.delete('/empleados/:id',empleadosController.deleteEmpleado);
 
