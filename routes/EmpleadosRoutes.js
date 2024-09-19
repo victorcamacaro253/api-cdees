@@ -5,6 +5,11 @@ import authenticateToken from '../middleware/authenticationToken.js';
 
 const router = Router();
 
+//Ruta para obtener los empleados por todos los departamentos
+router.get('/empleados/departamento/', empleadosController.getEmpleadosByDepartamentos);
+
+//Ruta para obtener los empleados por un especifico departamento
+router.get('/empleados/departamento/dept',empleadosController.getEmpleadosByDepartamento);
 
 //Ruta para obtener todos los empleados de la base de datos
 router.get('/empleados',empleadosController.getAllEmpleados);
@@ -33,6 +38,8 @@ router.post('/empleados',empleadosController.checkUserExists,empleadosController
 
 router.delete('/empleados/:id',empleadosController.deleteEmpleado);
 
+//Ruta para cambiar el estatus del trabajador
 
+router.patch('/empleados/:id/estatus',empleadosController.statusEmpleado)
 
 export default router;
