@@ -207,7 +207,74 @@ try {
         res.status(500).json({ error: 'Error interno del servidor 1' });
     
 }
+
 }
+
+
+ const getEmpleadosByDepartamentos= async  (req,res)=>{
+const { id} = req.params;
+
+
+try{
+    const result =  await empleadosModel.getEmpleadosByDepartamentos();
+
+    if (!result) {
+        return res.status(404).json({ error: 'departamento no encontrado' });
+    }
+
+    res.json(result);
+
+}catch(error){
+    console.error('Error ejecutando la consulta:', error);
+    res.status(500).json({ error: 'Error interno del servidor 1' });
+}
+
+ }
+
+
+ const getEmpleadosByDepartamento = async(req,res)=>{
+ 
+    const {departamento}= req.query;
+console.log(departamento)
+    try {
+
+        const result = await empleadosModel.getEmpleadosByDepartamento(departamento);
+
+
+        res.json(result)
+        
+    } catch (error) {
+        console.error('Error ejecutando la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor ' });
+    }
+
+
+ }
+
+
+ const statusEmpleado = async (req,res)=>{
+    const {id}=req.params
+    const {status}= req.query
+
+    try {
+        
+        const result= await empleadosModel.statusEmpleado(id,status);
+        
+        if (!result) {
+              return res.status(404).json({ error: 'empleado no encontrado' });
+        }
+        const empleado= await empleadosModel.getEmpleadoById(id);
+
+        
+        res.json(empleado);
+
+    } catch (error) {
+        console.error('Error ejecutando la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor ' });
+    }
+ }
+
+
 
 export default {
     getAllEmpleados,
@@ -217,7 +284,10 @@ export default {
     deleteEmpleado,
     addEmpleado,
     checkUserExists,
-    getEmpleadoByName
+    getEmpleadoByName,
+    getEmpleadosByDepartamentos,
+    getEmpleadosByDepartamento,
+    statusEmpleado
 
 
 
