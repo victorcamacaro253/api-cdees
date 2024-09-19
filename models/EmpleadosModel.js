@@ -1,3 +1,4 @@
+import { query } from 'express';
 import { query as _query,pool } from '../db/db.js';
 
 const empleadosModel = {
@@ -53,6 +54,20 @@ const empleadosModel = {
         [nombre])
         return  result;
 
+    },
+
+    async getEmpleadosByDepartamentos(){
+        const result=  await _query('SELECT d.Departamento, COUNT(e.id_empleado) AS total_empleados FROM departamentos d LEFT JOIN empleados e ON d.id_departamento = e.id_departamento GROUP BY d.id_departamento ')
+        return result;
+    },
+    
+    async getEmpleadosByDepartamento(){
+        const result=  await _query('SELECT d.Departamento, COUNT(e.id_empleado) AS total_empleados FROM departamentos d LEFT JOIN empleados e ON d.id_departamento = e.id_departamento  WHERE d.Departamento = "Presidencia"   GROUP BY d.id_departamento');
+        return result;
+    },
+    async statusEmpleado(id,status){
+        const result= await _query('UPDATE empleados SET estatus=? WHERE id_empleado=?',[status,id]);
+        return result;
     }
 }
 
