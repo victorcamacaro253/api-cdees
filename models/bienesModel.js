@@ -1,8 +1,15 @@
-import { update } from 'firebase/database';
+//import { update } from 'firebase/database';
 import { query,pool } from '../db/db.js';
 
 const bienesModel ={
 
+
+ async getBienesByField(field,value){
+ 
+    const result = await query(`SELECT * FROM bienes INNER JOIN departamentos ON bienes.Responsable=departamentos.id_departamento WHERE ${field} = ?`, [value]);
+    return result;
+
+ },
 
 async getBienes(){
 
@@ -11,18 +18,16 @@ async getBienes(){
 },
 
 async getBienesById(id){
-    const result = await query('SELECT * FROM bienes WHERE id_bien = ?', [id]);
-    return  result;
+    return await this.getBienesByField('id_bien', id);
     
 },
  async getBienesByDepartamento(departamento){
 
-    const result= await  query('SELECT * FROM bienes INNER JOIN departamentos ON bienes.Responsable=departamentos.id_departamento WHERE ubicacion = ?', [departamento]);
-    return result;
+     return await this.getBienesByField('ubicacion', departamento);
 
 
- },
- 
+ }, 
+
  async updateBienes(id, updateFields, values){
     const query1 = `UPDATE bienes SET ${updateFields.join(', ')} WHERE id_bien = ?`;
      // Añadir el ID al final de los valores
@@ -33,9 +38,32 @@ async getBienesById(id){
 
     return results; // Retornar el resultado de la consulta
     
+ },
+
+ async getBienesActivo(){
+
+  const result = await query('SELECT * FROM bienes WHERE estatus= ?',["activo"]);
+  return result;
+
+ },
+
+
+ async cambiarStatusBien(estatus,id){
+    const query1 = `UPDATE bienes SET estatus = ? WHERE id_bien = ?`;
+    const finalValues = [estatus,id];
+    const results = await query(query1, finalValues);
+    return results;
+ },
+   
+
+ async deleteBien(id){
+ 
+    const result = await  query('DELETE FROM bienes WHERE id_bien = ?', [id]);
+    return result;
+
+
+
  }
-
-
 
 }
 export default bienesModel;

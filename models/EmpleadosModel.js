@@ -8,6 +8,8 @@ const empleadosModel = {
         return result;
     },
 
+    
+
 
     async getEmpleadoById(id){
         const result = await _query('SELECT id_empleado,Primer_nombre,Primer_apellido,cedula,Correo_electronico,telefono,Cargo,estatus,imagen FROM empleados INNER JOIN cargos ON empleados.Id_cargo=cargos.Id_cargo WHERE id_empleado= ?',[id]);
@@ -67,6 +69,58 @@ const empleadosModel = {
     },
     async statusEmpleado(id,status){
         const result= await _query('UPDATE empleados SET estatus=? WHERE id_empleado=?',[status,id]);
+        return result;
+    },
+    async getEmpleadosByFechaIngreso(fechaInicio, fechaFin) {
+        let query = `SELECT * FROM empleados WHERE 1=1   `; // Base de la consulta
+        const params = [];
+
+           // Si se proporciona fechaInicio, filtrar desde esa fecha en adelante
+           if (fechaInicio) {
+            query += " AND `fecha-ingreso` >= ?";
+            params.push(fechaInicio);
+        }
+
+        // Si se proporciona fechaFin, filtrar hasta esa fecha
+        if (fechaFin) {
+            query += " AND `fecha-ingreso` <= ?";
+            params.push(fechaFin);
+        }
+
+
+        // Ejecutar la consulta y devolver los resultados
+        const [rows] = await pool.query(query, params);
+        return rows;
+    },
+
+    async addMultipleUsers(empleados){
+
+        const queries = empleados.map(empleado=>{
+            const { Primer_nombre,
+                Segundo_nombre,
+                Primer_apellido,
+                Segundo_apellido,
+                 cedula,
+                 genero,
+                 email,
+                 direccion,
+                 id_estado,
+                 id_municipio,
+                 id_parroquia,
+                 id_ciudad,
+                 telefono,
+                 id_cargo,
+                 fecha_ingreso,
+                 fecha_salida,
+                 estatus,
+                 imagePath } = empleado
+
+          return _query('INSERT INTO `empleados`( `Primer_nombre`, `Segundo_Nombre`, `Primer_apellido`, `Segundo_apellido`, `cedula`, `Genero`, `Correo_electronico`, `direccion`, `id_estado`, `id_municipio`, `id_parroquia`, `id_ciudad`, `telefono`,`Id_cargo`, `fecha-ingreso`,`fecha-salida`, `estatus`, `imagen`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[ Primer_nombre,Segundo_nombre,Primer_apellido,Segundo_apellido, cedula,genero,email ,direccion,id_estado,id_municipio,id_parroquia,id_ciudad,telefono,id_cargo,fecha_ingreso,fecha_salida,estatus,imagePath])
+
+
+        })
+
+        const result = await Promise.all(queries);
         return result;
     }
 }
