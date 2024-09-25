@@ -146,8 +146,64 @@ const getBienesById = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor 1' });
 }
 
-     }
+}
+
+const getBienesActivo =  async (req, res) => {
+    
+    try {
+        const results = await bienesModel.getBienesActivo();
+        return  res.status(200).json(results);
+
+    } catch(error){
+        console.error('Error ejecutando la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+}
+
+const cambiarStatusBien= async (req,res)=>{
+    const { id } = req.params;
+   const {estatus}= req.body;
+   console.log(id,estatus)
+
+   try {
+    const result= await  bienesModel.cambiarStatusBien(estatus,id);
+
+     return res.json(result);
+
+   } catch (error) {
+    console.error('Error ejecutando la consulta:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+   }
+}
+
+
+const deleteBien= async  (req,res)=>{
+const {id} = req.params;
+
+try {
+    const result = await  bienesModel.deleteBien(id);
+    if  (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'bien no encontrado' });
+        }
+
+    res.json(result)
 
 
 
-export default {getBienes,getBienesById,getBienesByDepartamento,updateBienes}
+} catch (error) {
+    console.error('Error ejecutando la consulta:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+}
+
+}
+
+
+
+export default {
+    getBienes,
+    getBienesById,
+    getBienesByDepartamento,
+    updateBienes,
+    getBienesActivo,
+    cambiarStatusBien,
+    deleteBien}

@@ -274,7 +274,138 @@ console.log(departamento)
     }
  }
 
+ const getEmpleadosByFechaIngreso= async (req, res) => {
+    try {
+        const { fechaInicio, fechaFin } = req.query;
+      console.log(fechaInicio,fechaFin)
+      
 
+
+      
+        // Llamar al modelo para obtener los empleados
+        const empleados = await empleadosModel.getEmpleadosByFechaIngreso(fechaInicio, fechaFin);
+
+        res.status(200).json(empleados);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error al obtener empleados por fecha de ingreso" });
+    }
+}
+
+const addMultipleEmpleados= async (req,res)=>{
+    const {empleados} = req.body;
+    const imagePath = req.files && req.files.length > 0 ? `/uploads/${req.files[0].filename}` : null;
+
+    console.log(empleados)
+
+    if (!req.body || typeof req.body !== 'object' || !Array.isArray(req.body.empleados)) {
+        return res.status(400).json({ error: 'Products must be an array' });
+    }
+
+    const errors= [];
+    const createdEmpleados=[]
+
+
+    try{
+    const empleadosToInsert= []
+
+    for(const empleado of empleados){
+        const  {
+            Primer_nombre,
+            Segundo_nombre,
+            Primer_apellido,
+            Segundo_apellido,
+             cedula,
+             genero,
+             email,
+             direccion,
+             id_estado,
+             id_municipio,
+             id_parroquia,
+             id_ciudad,
+             telefono,
+             id_cargo,
+             fecha_ingreso,
+             fecha_salida,
+             estatus,
+             imagePath
+        } = empleado
+
+        if (!Primer_nombre || !Primer_apellido || !cedula || !email || !direccion || !id_cargo) {
+            errors.push({ error: 'Primer_nombre,Primer_apellido , cedula, email,direccion y id_cargo son requeridos' });
+            continue;
+        }
+
+       // Verificar si el empleado ya existe
+       const existingCedula = await empleadosModel.existingCedula(cedula);
+       if (existingCedula) {
+           errors.push({ error: 'El empleado ya existe',Primer_nombre });
+           continue;
+       }
+
+       empleadosToInsert.push({
+        Primer_nombre,
+        Segundo_nombre,
+        Primer_apellido,
+        Segundo_apellido,
+         cedula,
+         genero,
+         email,
+         direccion,
+         id_estado,
+         id_municipio,
+         id_parroquia,
+         id_ciudad,
+         telefono,
+         id_cargo,
+         fecha_ingreso,
+         fecha_salida,
+         estatus,
+         imagePath
+       })
+
+  
+            // Llamar a la función de inserción de múltiples productos en el modelo
+            const [result] = await empleadosModel.addMultipleUsers(empleadosToInsert);
+
+            createdEmpleados.push({ id: result.insertId, Primer_nombre });
+
+    }
+    
+    if (errors.length > 0) {
+        res.status(400).json({ errors });
+    } else {
+        res.status(201).json({ createdEmpleados });
+    }
+
+    }catch(error){
+        console.error('Error ejecutando la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor ' });
+    }
+
+}
+
+const deleteMultipleEmpleados= async (req,res)=>{
+   const {empleados} = req.body;
+
+   if(!Array.isArray(empleados)){
+    return res.status(400).json({ error: 'La lista de empleados debe ser un array'})
+   }
+
+   try {
+    const deletePromises = empleados.map(empleado=>{
+        const {id}= empleado;
+        return  empleadosModel.deleteEmpleado(id);
+    })
+
+    await Promise.all(deletePromises)
+
+    res.json({message:'Empleados eliminando  con éxito'})
+
+   } catch (error) {
+    res.status(500).json({error:'Error interno en el servidor'},error)
+   }
+}
 
 export default {
     getAllEmpleados,
@@ -287,7 +418,10 @@ export default {
     getEmpleadoByName,
     getEmpleadosByDepartamentos,
     getEmpleadosByDepartamento,
-    statusEmpleado
+    statusEmpleado,
+    getEmpleadosByFechaIngreso,
+    addMultipleEmpleados,
+    deleteMultipleEmpleados
 
 
 
