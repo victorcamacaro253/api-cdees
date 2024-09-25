@@ -3,9 +3,11 @@ import empleadosRoutes from './routes/EmpleadosRoutes.js';
 import administradoresRoutes from './routes/administradoresRoutes.js'
 import bienesRoutes from './routes/bienesRoutes.js'
 import helmet from 'helmet';
+import cors from 'cors'
 
 const app = express();
 
+app.use(cors())
 app.use(json());
 app.disable('x-powered-by')
 
