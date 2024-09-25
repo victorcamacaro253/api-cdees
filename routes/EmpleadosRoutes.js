@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import empleadosController from '../controller/EmpleadosController.js';
 import authenticateToken from '../middleware/authenticationToken.js';
+import upload from '../middleware/multerConfig.js';
 
 
 const router = Router();
@@ -21,6 +22,9 @@ router.get('/empleados/activo',empleadosController.getEmpleadosActivos)
 //Ruta para obtener los empleados por nombre
 router.get('/empleados/nombre',empleadosController.getEmpleadoByName);
 
+// Ruta para obtener empleados por rango de fechas de ingreso
+router.get('/empleados/fecha', empleadosController.getEmpleadosByFechaIngreso);
+
 //Ruta para obtener todos los empleados por id
 router.get('/empleados/:id',empleadosController.getEmpleadoById)
 
@@ -33,8 +37,14 @@ router.put('/empleados/:id',empleadosController.updateEmpleado)
 
 router.post('/empleados',empleadosController.checkUserExists,empleadosController.addEmpleado)
 
-//Ruta  para eliminar un empleado
 
+//Ruta para agregar multiples empleados
+router.post('/empleados/addMultipleEmpleados',upload.single('image'),empleadosController.checkUserExists,empleadosController.addMultipleEmpleados)
+
+//Ruta para eliminar multiples empleados
+router.post('/empleados/deleteMultipleEmpleados',empleadosController.deleteMultipleEmpleados);
+
+//Ruta  para eliminar un empleado
 
 router.delete('/empleados/:id',empleadosController.deleteEmpleado);
 
