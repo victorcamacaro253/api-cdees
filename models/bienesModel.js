@@ -63,6 +63,44 @@ async getBienesById(id){
 
 
 
+ },
+
+ async existingBien (numero_serie){
+ const [result]= await query( 'SELECT numero_serie from bienes WHERE numero_serie = ?',[numero_serie]);
+ return  result;
+
+
+ },
+
+
+ async addMultipleBienes(bienes){
+   const queries= bienes.map(bien=>{
+      const {  nombre_bien,
+         tipo_bien,
+         fecha_adquisicion,
+         valor_bien,
+         estado_bien,
+         estatus,
+         responsable,
+         ubicacion,
+         numero_serie,
+         proveedor}= bien
+
+         return query('INSERT INTO bienes (nombre_bien,tipo_bien,fecha_adquisicion,valor_bien,estado_bien,estatus,responsable,ubicacion,numero_serie,proveedor) VALUES (?,?,?,?,?,?,?,?,?,?)',
+         [ nombre_bien,
+            tipo_bien,
+            fecha_adquisicion,
+            valor_bien,
+            estado_bien,
+            estatus,
+            responsable,
+            ubicacion,
+            numero_serie,
+            proveedor])
+   })
+
+   const results = await Promise.all(queries);
+   return results;
  }
 
 }

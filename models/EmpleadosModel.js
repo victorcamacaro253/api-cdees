@@ -23,7 +23,7 @@ const empleadosModel = {
     },
 
     async existingCedula(cedula) {
-        const [results] = await _query('SELECT cedula FROM empleados WHERE cedula = ?',[cedula]);
+        const results = await _query('SELECT cedula FROM empleados WHERE cedula = ?',[cedula]);
         return results;
     },
 
@@ -121,6 +121,59 @@ const empleadosModel = {
         })
 
         const result = await Promise.all(queries);
+        return result;
+    },
+
+    async updateMultipleEmpleados(empleados){
+        const queries = empleados.map(empleado=>{
+            const {
+                id_empleado,
+                Primer_nombre,
+                Segundo_nombre,
+                Primer_apellido,
+                Segundo_apellido,
+                cedula,
+                genero,
+                email,
+                direccion,
+                id_estado,
+                id_municipio,
+                id_parroquia,
+                id_ciudad,
+                telefono,
+                id_cargo,
+                fecha_ingreso,
+                fecha_salida,
+                estatus,
+                imagePath
+            } = empleado
+
+
+            return _query('UPDATE empleados SET Primer_nombre= ? ,  Segundo_Nombre = ?, Primer_apellido = ?, Segundo_apellido = ?, cedula = ?, Genero = ?, Correo_electronico = ?, direccion = ?, id_estado = ?, id_municipio = ?, id_parroquia = ?, id_ciudad = ?, telefono = ?, Id_cargo = ?, `fecha-ingreso` = ?, `fecha-salida` = ?, estatus = ?, imagen = ? WHERE id_empleado = ?',
+            [            Primer_nombre,
+                Segundo_nombre,
+                Primer_apellido,
+                Segundo_apellido,
+                cedula,
+                genero,
+                email,
+                direccion,
+                id_estado,
+                id_municipio,
+                id_parroquia,
+                id_ciudad,
+                telefono,
+                id_cargo,
+                fecha_ingreso,
+                fecha_salida,
+                estatus,
+                imagePath,
+                id_empleado
+    ])
+
+        })
+
+        const result= await Promise.all(queries);
         return result;
     }
 }
