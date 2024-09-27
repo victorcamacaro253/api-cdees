@@ -197,6 +197,106 @@ try {
 
 }
 
+  const addMultipleBienes= async (req,res)=>{
+    const {bienes}= req.body;
+    console.log(bienes)
+
+    if (!req.body || typeof req.body !== 'object' || !Array.isArray(req.body.bienes)) {
+        return res.status(400).json({ error: 'Bienes must be an array' });
+    }
+
+    const errors=[];
+    const insertedBienes= [];
+
+    
+    try {
+       const bienesToInsert=[]
+
+       for(const bien of bienes ){
+        const { nombre_bien,
+            tipo_bien,
+            fecha_adquisicion,
+            valor_bien,
+            estado_bien,
+            responsable,
+            ubicacion,
+            numero_serie,
+            proveedor } = bien
+
+            if (!nombre_bien || !tipo_bien || !fecha_adquisicion || !valor_bien || !numero_serie ) {
+                errors.push({ error: 'nombre bien,tipo bien,fecha adquisicion, valor bien y numero de serie son requeridos' });
+                continue;
+       }
+
+       const existingBien = await bienesModel.existingBien(numero_serie) ;
+       if(existingBien){
+        errors.push({error:'El bien ya existe  en la base de datos',nombre_bien})
+    continue;   
+    }
+  
+    const estatus = 'activo'
+
+ bienesToInsert.push({
+    nombre_bien,
+    tipo_bien,
+    fecha_adquisicion,
+    valor_bien,
+    estado_bien,
+    estatus,
+    responsable,
+    ubicacion,
+    numero_serie,
+    proveedor
+ })
+
+ const [result] = await bienesModel.addMultipleBienes(bienesToInsert)
+
+ insertedBienes.push({id: result.insertId,nombre_bien})
+
+       
+    }
+
+     
+ if (errors.length > 0) {
+    res.status(400).json({ errors });
+} else {
+    res.status(201).json({ insertedBienes });
+}
+
+
+    }catch(error){
+        console.error('Error ejecutando la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor ' });
+    }
+  }
+
+
+  const deleteMultipleBienes = async  (req,res)=>{
+    const {bienes}=req.body;
+
+    if(!Array.isArray(bienes)){
+        return res.status(400).json({error:'Tiene que se un array'})
+    }
+
+
+    try {
+        const deletePromises = bienes.map(bien=>{
+            const { id } = bien;
+            return bienesModel.deleteBien(id) 
+        })
+
+        await Promise.all(deletePromises)
+        
+    res.json({message:'Bienes eliminado con exito'})
+
+    } catch (error) {
+        res.status(500).json({error:'Error interno en el servidor'},error)
+
+    }
+
+  }
+
+
 
 
 export default {
@@ -206,4 +306,7 @@ export default {
     updateBienes,
     getBienesActivo,
     cambiarStatusBien,
-    deleteBien}
+    deleteBien,
+    addMultipleBienes,
+    deleteMultipleBienes
+}

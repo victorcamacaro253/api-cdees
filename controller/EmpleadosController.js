@@ -327,7 +327,7 @@ const addMultipleEmpleados= async (req,res)=>{
              id_cargo,
              fecha_ingreso,
              fecha_salida,
-             estatus,
+             
              imagePath
         } = empleado
 
@@ -343,6 +343,8 @@ const addMultipleEmpleados= async (req,res)=>{
            continue;
        }
 
+     const estatus='activo'    
+   
        empleadosToInsert.push({
         Primer_nombre,
         Segundo_nombre,
@@ -407,6 +409,112 @@ const deleteMultipleEmpleados= async (req,res)=>{
    }
 }
 
+const updateMultipleEmpleados = async (req,res)=>{
+    const {empleados} = req.body;
+    const imagePath = req.files && req.files.length > 0 ? `/uploads/${req.files[0].filename}` : null;
+
+
+
+    if (!req.body || typeof req.body !== 'object' || !Array.isArray(req.body.empleados)) {
+        return res.status(400).json({ error: 'Empleados must be an array' });
+    }
+
+
+    const errors = [];
+    const updatedEmpleados = [];
+    
+    try{
+   
+        const empleadosToUpdate= [];
+
+        for(const  empleado of empleados){
+            const {
+                id_empleado,
+                Primer_nombre,
+                Segundo_nombre,
+                Primer_apellido,
+                Segundo_apellido,
+                cedula,
+                genero,
+                email,
+                direccion,
+                id_estado,
+                id_municipio,
+                id_parroquia,
+                id_ciudad,
+                telefono,
+                id_cargo,
+                fecha_ingreso,
+                fecha_salida,
+                
+                imagePath
+            } = empleado;
+
+            if (!id_empleado || !Primer_nombre || !Primer_apellido || !cedula || !email || !direccion || !id_cargo) {
+                errors.push({ error: 'id_empleado, Primer_nombre, Primer_apellido, cedula, email, direccion y id_cargo son requeridos', empleado });
+                continue;
+            }
+
+         // Verificar si el empleado ya existe
+       const existingEmpleado = await empleadosModel.getEmpleadoById(id_empleado);
+       if (!existingEmpleado) {
+           errors.push({ error: 'El empleado no existe',Primer_nombre });
+           continue;
+       }
+       const estatus= 'activo';
+
+  // Crear objeto para actualizar el empleado
+  empleadosToUpdate.push({
+    id_empleado,
+    Primer_nombre,
+    Segundo_nombre,
+    Primer_apellido,
+    Segundo_apellido,
+    cedula,
+    genero,
+    email,
+    direccion,
+    id_estado,
+    id_municipio,
+    id_parroquia,
+    id_ciudad,
+    telefono,
+    id_cargo,
+    fecha_ingreso,
+    fecha_salida,
+    estatus,
+    imagePath
+});
+
+
+   
+if (empleadosToUpdate.length > 0) {
+    // Llamar a la función de actualización múltiple en el modelo
+    const results = await empleadosModel.updateMultipleEmpleados(empleadosToUpdate);
+    updatedEmpleados.push({ id: results.insertId, Primer_nombre });
+
+   
+}
+
+        }
+
+           
+    if (errors.length > 0) {
+        res.status(400).json({ errors });
+    } else {
+        res.status(201).json({ updatedEmpleados });
+    }
+
+
+    }catch(error){
+        console.error('Error actualizando empleados:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+
+    }
+
+}
+
+
 export default {
     getAllEmpleados,
     getEmpleadoById,
@@ -421,7 +529,8 @@ export default {
     statusEmpleado,
     getEmpleadosByFechaIngreso,
     addMultipleEmpleados,
-    deleteMultipleEmpleados
+    deleteMultipleEmpleados,
+    updateMultipleEmpleados
 
 
 
