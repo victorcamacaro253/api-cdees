@@ -24,6 +24,12 @@ router.put('/bienes/:id',bienesController.updateBienes)
 //Ruta para cambiar el estatus del bien
 router.put('/bienes/cambiar/:id',bienesController.cambiarStatusBien);
 
+//Ruta para agregar multiples bienes
+router.post('/bienes',bienesController.addMultipleBienes) 
+
+//Ruta para eliminar multiples bienes
+router.post('/bienes/deleteMultipleBienes',bienesController.deleteMultipleBienes);
+
 //Ruta para eliminar un bien 
 router.delete('/bienes/:id',bienesController.deleteBien);
 

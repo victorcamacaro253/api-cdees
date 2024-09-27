@@ -29,6 +29,9 @@ router.get('/empleados/fecha', empleadosController.getEmpleadosByFechaIngreso);
 router.get('/empleados/:id',empleadosController.getEmpleadoById)
 
 
+//Ruta para actualizar empleados multiples
+router.put('/empleados/updateMultipleEmpleados',upload.single('image'),empleadosController.updateMultipleEmpleados)
+
 
 //Ruta para actualizar el empleado 
 router.put('/empleados/:id',empleadosController.updateEmpleado)
