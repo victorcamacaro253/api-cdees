@@ -63,6 +63,28 @@ const administradoresModel={
         const values= [newPassword,id];
         const rows = await _query(result,values);
         return rows;
+     },
+
+     async getAdmModules(Id){
+
+        const sql = `SELECT 
+        
+        m.nombre_modulo, 
+        GROUP_CONCAT(p.nombre_permiso SEPARATOR ', ') AS permisos
+    FROM 
+        usuario_modulo_permiso mp
+    JOIN 
+        modulos m ON mp.id_modulo = m.id_modulo
+    JOIN 
+        permisos p ON mp.id_permiso = p.id_permiso
+    WHERE 
+        mp.id_usuario = ?
+    GROUP BY 
+        m.id_modulo, m.nombre_modulo;;
+`
+  const result= await _query(sql,[Id]);
+  return result;
+      
      }
 
 }
