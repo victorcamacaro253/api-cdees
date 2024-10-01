@@ -181,11 +181,38 @@ const  changePassword = async (req,res) =>{
 }
 
 
+//--------------------------------------------------------------------------------
+
+const getAdmModules= async (req,res)=>{
+    const {id} = req.params;
+
+    try {
+
+        const result = await  administradoresModel.getAdmModules(id);
+
+        const user=result;
+
+        if (!user) {
+         return res.status(404).json({error:'Usuario no encontrado'})
+
+        }
+       return  res.status(200).json(user)
+
+        
+    } catch (error) {
+        console.error('Error interno del servidor :', error);
+        return res.status(500).json({error:'Error del servidor'})
+    }
+
+
+}
+
 export default {
 
     getAllAdministradores,
     login,
     addAdministrador,
     deleteAdministrador,
-    changePassword
+    changePassword,
+    getAdmModules
 }
