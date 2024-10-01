@@ -7,21 +7,30 @@ const router = Router();
 
 //Ruta para obtener los datos de los  administradores
 
-router.get('/administradores',administradoresController.getAllAdministradores);
+router.get('/adm',administradoresController.getAllAdministradores);
+
+
+
+router.get('/adm')
 
 //Ruta para logearse
-router.post('/administradores/login',administradoresController.login)
+router.post('/adm/login',administradoresController.login)
 
 //Ruta para crear un nuevo administrador
-router.post('/administradores',administradoresController.addAdministrador)
+router.post('/adm',administradoresController.addAdministrador)
 
 
 //Ruta para cambiar una contraseña
-router.post('/administradores/change-password/:id',administradoresController.changePassword)
+router.post('/adm/change-password/:id',administradoresController.changePassword)
 
 
 //Ruta para  eliminar un administrador
-router.delete('/administradores/:id',administradoresController.deleteAdministrador)
+router.delete('/adm/:id',administradoresController.deleteAdministrador)
 
+//--------------------------------------------------------------------------------
+
+router.get('/adminAuth/:id/modulos',administradoresController.getAdmModules)
+
+//router.post('/admAuth',administradoresController.addModulosPermisos)
 
 export default router;
