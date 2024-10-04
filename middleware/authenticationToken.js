@@ -11,6 +11,7 @@ const authenticateToken = (req, res, next) => {
         if (err) return res.status(403).json({ error: 'Token no válido' });
 
         req.user = user; // Guardar los datos del usuario en la solicitud
+        console.log(user)
         next();
     });
 };
