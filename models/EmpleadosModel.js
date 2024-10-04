@@ -23,8 +23,8 @@ const empleadosModel = {
     },
 
     async existingCedula(cedula) {
-        const results = await _query('SELECT cedula FROM empleados WHERE cedula = ?',[cedula]);
-        return results;
+        const results = await _query('SELECT cedula  FROM empleados WHERE cedula = ?',[cedula]);
+        return results.length > 0;
     },
 
     async addEmpleado( Primer_nombre,Segundo_nombre,Primer_apellido,Segundo_apellido, cedula,genero,email ,direccion,id_estado,id_municipio,id_parroquia,id_ciudad,telefono,id_cargo,fecha_ingreso,fecha_salida,estatus,imagen){
