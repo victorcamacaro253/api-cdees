@@ -7,8 +7,7 @@ import cors from 'cors'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser'; // <-- Agrega esto
-import csrf from 'csurf'; // <-- Agrega esto también
-
+import csrf from 'csurf'; // <-- Agrega esto tam
 
 // Get the current file's directory (equivalent to __dirname in CommonJS)
 const __filename = fileURLToPath(import.meta.url);
@@ -40,7 +39,7 @@ app.get('/csrf-token', csrfProtection, (req, res) => {
   });
   
 
-app.use('/api',csrfProtection,empleadosRoutes);
+app.use('/api',empleadosRoutes);
 
 app.use('/api2',administradoresRoutes);
 
