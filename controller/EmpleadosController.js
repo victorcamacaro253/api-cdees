@@ -79,7 +79,7 @@ const checkUserExists = async (req, res, next) => {
     try {
       const existingUser = await empleadosModel.existingCedula(cedula);
       if (existingUser) {
-        return res.status(400).json({ error: 'El usario uya existe' });
+        return res.status(400).json({ error: 'El usuario ya existe' });
       }
       next();
     } catch (err) {
@@ -292,7 +292,7 @@ console.log(departamento)
     }
 }
 
-const addMultipleEmpleados= async (req,res)=>{
+/*const addMultipleEmpleados= async (req,res)=>{
     const {empleados} = req.body;
     const imagePath = req.files && req.files.length > 0 ? `/uploads/${req.files[0].filename}` : null;
 
@@ -335,7 +335,7 @@ const addMultipleEmpleados= async (req,res)=>{
             errors.push({ error: 'Primer_nombre,Primer_apellido , cedula, email,direccion y id_cargo son requeridos' });
             continue;
         }
-
+       console.log(cedula)
        // Verificar si el empleado ya existe
        const existingCedula = await empleadosModel.existingCedula(cedula);
        if (existingCedula) {
@@ -385,7 +385,97 @@ const addMultipleEmpleados= async (req,res)=>{
         res.status(500).json({ error: 'Error interno del servidor ' });
     }
 
-}
+}*/
+
+const addMultipleEmpleados = async (req, res) => {
+    const { empleados } = req.body;
+    const imagePath = req.files && req.files.length > 0 ? `/uploads/${req.files[0].filename}` : null;
+
+    if (!req.body || typeof req.body !== 'object' || !Array.isArray(req.body.empleados)) {
+        return res.status(400).json({ error: 'Employees must be an array' });
+    }
+
+    const errors = [];
+    const createdEmpleados = [];
+
+    try {
+        const empleadosToInsert = [];
+
+        for (const empleado of empleados) {
+            const {
+                Primer_nombre,
+                Segundo_nombre,
+                Primer_apellido,
+                Segundo_apellido,
+                cedula,
+                genero,
+                email,
+                direccion,
+                id_estado,
+                id_municipio,
+                id_parroquia,
+                id_ciudad,
+                telefono,
+                id_cargo,
+                fecha_ingreso,
+                fecha_salida,
+            } = empleado;
+
+            // Validar que los campos requeridos no estén vacíos
+            if (!Primer_nombre || !Primer_apellido || !cedula || !email || !direccion || !id_cargo) {
+                errors.push({ error: 'Primer_nombre, Primer_apellido, cedula, email, direccion y id_cargo son requeridos' });
+                continue;
+            }
+
+            // Verificar si el empleado ya existe
+            const existingCedula = await empleadosModel.existingCedula(cedula);
+            if (existingCedula) {
+                errors.push({ error: 'El empleado ya existe', Primer_nombre });
+                continue;
+            }
+
+            empleadosToInsert.push({
+                Primer_nombre,
+                Segundo_nombre,
+                Primer_apellido,
+                Segundo_apellido,
+                cedula,
+                genero,
+                email,
+                direccion,
+                id_estado,
+                id_municipio,
+                id_parroquia,
+                id_ciudad,
+                telefono,
+                id_cargo,
+                fecha_ingreso,
+                fecha_salida,
+                estatus: 'activo',
+                imagePath
+            });
+        }
+
+        // Solo insertar si hay empleados válidos
+        if (empleadosToInsert.length > 0) {
+            const [result] = await empleadosModel.addMultipleUsers(empleadosToInsert);
+            for (let i = 0; i < empleadosToInsert.length; i++) {
+                createdEmpleados.push({ id: result.insertId + i, Primer_nombre: empleadosToInsert[i].Primer_nombre });
+            }
+        }
+
+        if (errors.length > 0) {
+            res.status(400).json({ errors });
+        } else {
+            res.status(201).json({ createdEmpleados });
+        }
+    } catch (error) {
+        console.error('Error ejecutando la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+
 
 const deleteMultipleEmpleados= async (req,res)=>{
    const {empleados} = req.body;

@@ -56,7 +56,7 @@ const login= async (req,res)=>{
                     // Generar un token JWT tras la autenticación exitosa
                     const token = sign(
                         {
-                            id: user.id,       // El ID del usuario
+                            id: user.Id,       // El ID del usuario
                             username: user.Usuario,
                             role: user.Rol
                         },
@@ -75,6 +75,7 @@ const login= async (req,res)=>{
                         message: 'Autenticación exitosa',
                         token,  // El token JWT
                         user: {
+                            id:user.Id,
                             username: user.Usuario,
                             role: user.Rol
                         }
@@ -186,6 +187,12 @@ const  changePassword = async (req,res) =>{
 const getAdmModules= async (req,res)=>{
     const {id} = req.params;
 
+   
+  if (isNaN(id) || id <= 0) {
+    return res.status(HTTP_NOT_FOUND).json({ error: 'Usuario no encontrado' });
+  }
+
+
     try {
 
         const result = await  administradoresModel.getAdmModules(id);
@@ -207,6 +214,78 @@ const getAdmModules= async (req,res)=>{
 
 }
 
+
+const addModulosPermisos= async (req,res)=>{
+const {id_adm,modulos} = req.body
+
+if(!id_adm  || !modulos || modulos.lenght === 0 ){
+
+    return res.status(400).json({message:'Datos incompletos'})
+}
+
+try{
+
+for(const modulo of modulos){
+    const {id_modulo,permisos}= modulo;
+
+    if (!id_modulo || !permisos || permisos.length === 0) {
+        continue; // Saltar si faltan datos
+    }
+
+    for (const id_permiso of permisos){
+        
+     await  administradoresModel.addModulosPermisos(id_adm,id_modulo,id_permiso)
+
+    }
+}
+
+return res.status(200).json( {message:'Modulos y permisos asignados correctamente'})
+
+
+}catch(error){
+ console.error('Error interno del servidor :', error);
+ return  res.status(500).json({error:'Error al asignar  modulos y permisos'})
+
+
+}
+
+}
+
+
+const deleteModulosPermisos= async (req,res)=>{
+    const { id_adm,modulos }= req.body
+
+    
+        if(!id_adm || !modulos  || modulos.length === 0){
+     return res.status(400).json({ message: 'Datos incompletos' });
+        }
+
+        try{
+
+            for(const modulo of modulos){
+                const {id_modulo,permisos}= modulo
+            
+                if(!id_modulo ||  !permisos || permisos.length === 0){
+             
+
+                    const result = await administradoresModel.deleteAdmModulo(id_adm,id_modulo)
+
+                }else{
+                    const result = await administradoresModel.deleteModulosPermisos(id_adm,id_modulo,permisos)
+                }
+            
+            }
+
+            return res.json({message:'Permisos Eliminados correctamente'})
+
+
+    }catch(error){
+        console.error('Error interno del servidor :', error);
+        return res.status(500).json({error:'Error al eliminar modulos y permisos'})
+    }
+}
+
+
 export default {
 
     getAllAdministradores,
@@ -214,5 +293,7 @@ export default {
     addAdministrador,
     deleteAdministrador,
     changePassword,
-    getAdmModules
+    getAdmModules,
+    addModulosPermisos,
+    deleteModulosPermisos
 }
