@@ -2,6 +2,7 @@ import { Router } from 'express';
 import empleadosController from '../controller/EmpleadosController.js';
 import authenticateToken from '../middleware/authenticationToken.js';
 import upload from '../middleware/multerConfig.js';
+import checkPermissions from '../middleware/checkPermissions.js';
 
 
 const router = Router();
@@ -42,7 +43,7 @@ router.post('/empleados',empleadosController.checkUserExists,empleadosController
 
 
 //Ruta para agregar multiples empleados
-router.post('/empleados/addMultipleEmpleados',upload.single('image'),empleadosController.checkUserExists,empleadosController.addMultipleEmpleados)
+router.post('/empleados/addMultipleEmpleados',upload.single('image'),authenticateToken,checkPermissions('create'),empleadosController.addMultipleEmpleados)
 
 //Ruta para eliminar multiples empleados
 router.post('/empleados/deleteMultipleEmpleados',empleadosController.deleteMultipleEmpleados);

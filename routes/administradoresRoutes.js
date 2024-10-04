@@ -11,8 +11,6 @@ router.get('/adm',administradoresController.getAllAdministradores);
 
 
 
-router.get('/adm')
-
 //Ruta para logearse
 router.post('/adm/login',administradoresController.login)
 
@@ -31,6 +29,8 @@ router.delete('/adm/:id',administradoresController.deleteAdministrador)
 
 router.get('/adminAuth/:id/modulos',administradoresController.getAdmModules)
 
-//router.post('/admAuth',administradoresController.addModulosPermisos)
+router.post('/adminAuth',administradoresController.addModulosPermisos)
+
+router.post('/adminAuth/remove',administradoresController.deleteModulosPermisos)
 
 export default router;
