@@ -3,7 +3,7 @@ import empleadosController from '../controller/EmpleadosController.js';
 import authenticateToken from '../middleware/authenticationToken.js';
 import upload from '../middleware/multerConfig.js';
 import checkPermissions from '../middleware/checkPermissions.js';
-
+import checkModuleAccess from '../middleware/checkModuleAccess.js';
 
 const router = Router();
 
@@ -14,7 +14,7 @@ router.get('/empleados/departamento/', empleadosController.getEmpleadosByDeparta
 router.get('/empleados/departamento/dept',empleadosController.getEmpleadosByDepartamento);
 
 //Ruta para obtener todos los empleados de la base de datos
-router.get('/empleados',empleadosController.getAllEmpleados);
+router.get('/empleados',checkPermissions('read'),empleadosController.getAllEmpleados);
 
 //Ruta para obtener los empleados activos
 router.get('/empleados/activo',empleadosController.getEmpleadosActivos)
@@ -39,7 +39,12 @@ router.put('/empleados/:id',empleadosController.updateEmpleado)
 
 //Ruta para agregar un empleado
 
-router.post('/empleados',empleadosController.checkUserExists,empleadosController.addEmpleado)
+router.post('/empleados',
+authenticateToken,
+empleadosController.checkUserExists,
+checkModuleAccess(['rrhh','administracion']),
+checkPermissions('create'),
+empleadosController.addEmpleado)
 
 
 //Ruta para agregar multiples empleados
