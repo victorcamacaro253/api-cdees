@@ -6,9 +6,10 @@ const { sign } = pkg;
 import administradoresModel from '../models/administradoresModel.js'
 
 
+class  administradoresController {
 
 
-const getAllAdministradores = async (req,res) =>{
+static getAllAdministradores = async (req,res) =>{
     res.header('Access-Control-Allow-Origin','*')
 
     try{
@@ -21,7 +22,7 @@ const getAllAdministradores = async (req,res) =>{
     }
 }
 
-const login= async (req,res)=>{
+static login= async (req,res)=>{
     const { username, password } = req.body;
 
     // Configurar encabezados CORS
@@ -92,7 +93,8 @@ const login= async (req,res)=>{
 
 }
 
-const addAdministrador= async  (req,res) =>{
+
+static addAdministrador= async  (req,res) =>{
   const {username,email,password,estatus,rol} = req.body
   console.log(username)
   if (!username || !email || !password || !estatus || !rol) {
@@ -120,7 +122,8 @@ const addAdministrador= async  (req,res) =>{
 
 }
 
-const deleteAdministrador = async (req,res) =>{
+
+static deleteAdministrador = async (req,res) =>{
  const {id} = req.params;
 
  try {
@@ -141,7 +144,7 @@ const deleteAdministrador = async (req,res) =>{
 
 
 
-const  changePassword = async (req,res) =>{
+static  changePassword = async (req,res) =>{
     const {id} = req.params;
    const {oldPassword,newPassword}= req.body
 
@@ -184,7 +187,7 @@ const  changePassword = async (req,res) =>{
 
 //--------------------------------------------------------------------------------
 
-const getAdmModules= async (req,res)=>{
+static getAdmModules= async (req,res)=>{
     const {id} = req.params;
 
    
@@ -215,7 +218,7 @@ const getAdmModules= async (req,res)=>{
 }
 
 
-const addModulosPermisos= async (req,res)=>{
+static addModulosPermisos= async (req,res)=>{
 const {id_adm,modulos} = req.body
 
 if(!id_adm  || !modulos || modulos.lenght === 0 ){
@@ -252,7 +255,7 @@ return res.status(200).json( {message:'Modulos y permisos asignados correctament
 }
 
 
-const deleteModulosPermisos= async (req,res)=>{
+static deleteModulosPermisos= async (req,res)=>{
     const { id_adm,modulos }= req.body
 
     
@@ -285,15 +288,6 @@ const deleteModulosPermisos= async (req,res)=>{
     }
 }
 
-
-export default {
-
-    getAllAdministradores,
-    login,
-    addAdministrador,
-    deleteAdministrador,
-    changePassword,
-    getAdmModules,
-    addModulosPermisos,
-    deleteModulosPermisos
 }
+
+export default administradoresController
