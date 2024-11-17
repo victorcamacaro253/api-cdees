@@ -1,9 +1,9 @@
 import { query as _query, pool } from '../db/db.js'
 import empleadosModel from '../models/EmpleadosModel.js';
 
+class empleadosController {
 
-
-const getAllEmpleados = async (req, res) => {
+static getAllEmpleados = async (req, res) => {
     res.header('Access-Control-Allow-Origin','*')
     try {
         const results = await empleadosModel.getAllEmpleados();
@@ -22,7 +22,7 @@ const getAllEmpleados = async (req, res) => {
     }
 };
 
-const getEmpleadoById = async (req,res) =>{
+static getEmpleadoById = async (req,res) =>{
     const { id } = req.params
 
     try{
@@ -42,7 +42,7 @@ const getEmpleadoById = async (req,res) =>{
     }
 }
 
-const getEmpleadosActivos = async  (req,res) =>{
+static getEmpleadosActivos = async  (req,res) =>{
 
     try {
         const result = await empleadosModel.getEmpleadosActivos();
@@ -54,7 +54,7 @@ const getEmpleadosActivos = async  (req,res) =>{
     }
 }
 
-const getEmpleadoByName= async (req,res)=>{
+static getEmpleadoByName= async (req,res)=>{
 const {nombre}= req.query;
 console.log(nombre)
 try{
@@ -73,7 +73,7 @@ try{
 }
 
   
-const checkUserExists = async (req, res, next) => {
+static checkUserExists = async (req, res, next) => {
     const { cedula } = req.body;
   
     try {
@@ -89,7 +89,7 @@ const checkUserExists = async (req, res, next) => {
   };
   
 
- const addEmpleado = async (req,res) =>{
+ static addEmpleado = async (req,res) =>{
     
     const { Primer_nombre,Segundo_nombre,Primer_apellido,Segundo_apellido, cedula,genero,email ,direccion,id_estado,id_municipio,id_parroquia,id_ciudad,telefono,id_cargo,fecha_ingreso,fecha_salida,estatus,imagen } = req.body;
    
@@ -101,6 +101,15 @@ const checkUserExists = async (req, res, next) => {
         return res.status(400).json({ error: 'La contraseña debe tener al menos 7 caracteres' });
     }
 */
+
+   
+            // Verificar si el empleado ya existe
+     const existingCedula = await empleadosModel.existingCedula(cedula);
+    if (existingCedula) {
+      return  res.status(400).json({ error: 'El empleado ya existe' });
+
+            }
+
     try{
       //  const hashedPassword = await hash(password, 10);
     const newUser = await empleadosModel.addEmpleado(Primer_nombre,Segundo_nombre,Primer_apellido,Segundo_apellido, cedula,genero,email ,direccion,id_estado,id_municipio,id_parroquia,id_ciudad,telefono,id_cargo,fecha_ingreso,fecha_salida,estatus,imagen );
@@ -115,8 +124,7 @@ const checkUserExists = async (req, res, next) => {
 
   }
 
-
-const updateEmpleado= async (req,res) =>{
+static  updateEmpleado= async (req,res) =>{
     const {id} = req.params;
     const {Primer_nombre,Segundo_nombre,Primer_apellido,Segundo_apellido,cedula,direccion }= req.body
 
@@ -187,7 +195,7 @@ const updateEmpleado= async (req,res) =>{
 }
 
 
-const deleteEmpleado = async (req,res)=>{
+ static deleteEmpleado = async (req,res)=>{
 const { id } = req.params
 
 try {
@@ -211,12 +219,12 @@ try {
 }
 
 
- const getEmpleadosByDepartamentos= async  (req,res)=>{
+ static getEmpleadosByDepartamentos= async  (req,res)=>{
 const { id} = req.params;
 
 
 try{
-    const result =  await empleadosModel.getEmpleadosByDepartamentos();
+    const result =  await empleadosModel.getEmpleadosByDepartamentos(id);
 
     if (!result) {
         return res.status(404).json({ error: 'departamento no encontrado' });
@@ -232,7 +240,7 @@ try{
  }
 
 
- const getEmpleadosByDepartamento = async(req,res)=>{
+ static getEmpleadosByDepartamento = async(req,res)=>{
  
     const {departamento}= req.query;
 console.log(departamento)
@@ -252,7 +260,7 @@ console.log(departamento)
  }
 
 
- const statusEmpleado = async (req,res)=>{
+ static statusEmpleado = async (req,res)=>{
     const {id}=req.params
     const {status}= req.query
 
@@ -274,7 +282,7 @@ console.log(departamento)
     }
  }
 
- const getEmpleadosByFechaIngreso= async (req, res) => {
+ static  getEmpleadosByFechaIngreso= async (req, res) => {
     try {
         const { fechaInicio, fechaFin } = req.query;
       console.log(fechaInicio,fechaFin)
@@ -387,7 +395,7 @@ console.log(departamento)
 
 }*/
 
-const addMultipleEmpleados = async (req, res) => {
+static addMultipleEmpleados = async (req, res) => {
     const { empleados } = req.body;
     const imagePath = req.files && req.files.length > 0 ? `/uploads/${req.files[0].filename}` : null;
 
@@ -477,7 +485,7 @@ const addMultipleEmpleados = async (req, res) => {
 
 
 
-const deleteMultipleEmpleados= async (req,res)=>{
+static deleteMultipleEmpleados= async (req,res)=>{
    const {empleados} = req.body;
 
    if(!Array.isArray(empleados)){
@@ -499,7 +507,7 @@ const deleteMultipleEmpleados= async (req,res)=>{
    }
 }
 
-const updateMultipleEmpleados = async (req,res)=>{
+static updateMultipleEmpleados = async (req,res)=>{
     const {empleados} = req.body;
     const imagePath = req.files && req.files.length > 0 ? `/uploads/${req.files[0].filename}` : null;
 
@@ -603,25 +611,6 @@ if (empleadosToUpdate.length > 0) {
     }
 
 }
-
-
-export default {
-    getAllEmpleados,
-    getEmpleadoById,
-    getEmpleadosActivos,
-    updateEmpleado,
-    deleteEmpleado,
-    addEmpleado,
-    checkUserExists,
-    getEmpleadoByName,
-    getEmpleadosByDepartamentos,
-    getEmpleadosByDepartamento,
-    statusEmpleado,
-    getEmpleadosByFechaIngreso,
-    addMultipleEmpleados,
-    deleteMultipleEmpleados,
-    updateMultipleEmpleados
-
-
-
 }
+
+export default empleadosController
