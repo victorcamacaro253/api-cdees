@@ -2,9 +2,9 @@ import { query as _query, pool } from '../db/db.js'
 import bienesModel from '../models/bienesModel.js'
 
 
+class bienesController{
 
-
-const getBienes = async (req, res) => {
+static getBienes = async (req, res) => {
     res.header('Access-Control-Allow-Origin','*')
     try {
         const results = await bienesModel.getBienes();
@@ -23,7 +23,7 @@ const getBienes = async (req, res) => {
     }
 };
 
-const getBienesById = async (req, res) => {
+static getBienesById = async (req, res) => {
 
     const {id}= req.params
     res.header('Access-Control-Allow-Origin','*')
@@ -47,7 +47,7 @@ const getBienesById = async (req, res) => {
 }
 
 
-     const getBienesByDepartamento=  async (req, res) => {
+     static getBienesByDepartamento=  async (req, res) => {
      
         const { departamento } = req.query;
       console.log(departamento)
@@ -69,7 +69,7 @@ const getBienesById = async (req, res) => {
 
      }
 
-     const updateBienes = async (req,res)=>{
+     static updateBienes = async (req,res)=>{
         const {id} = req.params;
         const {nombre_bien, tipo_bien,fecha_adquisicion,valor_bien,estado_bien,responsable,ubicacion,numero_serie,proveedor}= req.body;
      
@@ -148,7 +148,7 @@ const getBienesById = async (req, res) => {
 
 }
 
-const getBienesActivo =  async (req, res) => {
+static getBienesActivo =  async (req, res) => {
     
     try {
         const results = await bienesModel.getBienesActivo();
@@ -160,7 +160,7 @@ const getBienesActivo =  async (req, res) => {
     }
 }
 
-const cambiarStatusBien= async (req,res)=>{
+static cambiarStatusBien= async (req,res)=>{
     const { id } = req.params;
    const {estatus}= req.body;
    console.log(id,estatus)
@@ -177,7 +177,7 @@ const cambiarStatusBien= async (req,res)=>{
 }
 
 
-const deleteBien= async  (req,res)=>{
+static deleteBien= async  (req,res)=>{
 const {id} = req.params;
 
 try {
@@ -197,7 +197,7 @@ try {
 
 }
 
-  const addMultipleBienes= async (req,res)=>{
+  static addMultipleBienes= async (req,res)=>{
     const {bienes}= req.body;
     console.log(bienes)
 
@@ -271,7 +271,7 @@ try {
   }
 
 
-  const deleteMultipleBienes = async  (req,res)=>{
+  static deleteMultipleBienes = async  (req,res)=>{
     const {bienes}=req.body;
 
     if(!Array.isArray(bienes)){
@@ -296,17 +296,7 @@ try {
 
   }
 
-
-
-
-export default {
-    getBienes,
-    getBienesById,
-    getBienesByDepartamento,
-    updateBienes,
-    getBienesActivo,
-    cambiarStatusBien,
-    deleteBien,
-    addMultipleBienes,
-    deleteMultipleBienes
 }
+
+
+export default bienesController
