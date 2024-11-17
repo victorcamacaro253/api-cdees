@@ -1,8 +1,5 @@
 import express, { json } from 'express';
-import empleadosRoutes from './routes/EmpleadosRoutes.js';
-import administradoresRoutes from './routes/administradoresRoutes.js'
-import bienesRoutes from './routes/bienesRoutes.js'
-import empresaRoutes from './routes/empresaRoutes.js'
+import routes  from './routes/index.js';
 import helmet from 'helmet';
 import cors from 'cors'
 import path from 'path';
@@ -26,6 +23,8 @@ const csrfProtection = csrf({ cookie: true });
 app.use(cookieParser());
 
 
+
+
 app.use(json());
 app.disable('x-powered-by')
 
@@ -43,13 +42,7 @@ app.get('/csrf-token', csrfProtection, (req, res) => {
   });
   
 
-app.use(empleadosRoutes);
-
-app.use(administradoresRoutes);
-
-app.use(bienesRoutes);
-
-app.use(empresaRoutes)
+app.use(routes);
 
 const PORT = process.env.PORT ?? 3001
 
