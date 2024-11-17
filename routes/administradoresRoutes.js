@@ -7,23 +7,23 @@ const router = Router();
 
 //Ruta para obtener los datos de los  administradores
 
-router.get('/adm',administradoresController.getAllAdministradores);
+router.get('/',administradoresController.getAllAdministradores);
 
 
 
 //Ruta para logearse
-router.post('/adm/login',administradoresController.login)
+router.post('/login',administradoresController.login)
 
 //Ruta para crear un nuevo administrador
-router.post('/adm',administradoresController.addAdministrador)
+router.post('/',administradoresController.addAdministrador)
 
 
 //Ruta para cambiar una contraseña
-router.post('/adm/change-password/:id',administradoresController.changePassword)
+router.post('/change-password/:id',administradoresController.changePassword)
 
 
 //Ruta para  eliminar un administrador
-router.delete('/adm/:id',administradoresController.deleteAdministrador)
+router.delete('/:id',administradoresController.deleteAdministrador)
 
 //--------------------------------------------------------------------------------
 

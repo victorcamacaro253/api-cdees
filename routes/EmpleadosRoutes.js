@@ -8,38 +8,38 @@ import checkModuleAccess from '../middleware/checkModuleAccess.js';
 const router = Router();
 
 //Ruta para obtener los empleados por todos los departamentos
-router.get('/empleados/departamento/', empleadosController.getEmpleadosByDepartamentos);
+router.get('/departamento/:id', empleadosController.getEmpleadosByDepartamentos);
 
 //Ruta para obtener los empleados por un especifico departamento
-router.get('/empleados/departamento/dept',empleadosController.getEmpleadosByDepartamento);
+router.get('/departamento/dept',empleadosController.getEmpleadosByDepartamento);
 
 //Ruta para obtener todos los empleados de la base de datos
-router.get('/empleados',checkPermissions('read'),empleadosController.getAllEmpleados);
+router.get('/',checkPermissions('read'),empleadosController.getAllEmpleados);
 
 //Ruta para obtener los empleados activos
-router.get('/empleados/activo',empleadosController.getEmpleadosActivos)
+router.get('/activo',empleadosController.getEmpleadosActivos)
 
 
 //Ruta para obtener los empleados por nombre
-router.get('/empleados/nombre',empleadosController.getEmpleadoByName);
+router.get('/nombre',empleadosController.getEmpleadoByName);
 
 // Ruta para obtener empleados por rango de fechas de ingreso
-router.get('/empleados/fecha', empleadosController.getEmpleadosByFechaIngreso);
+router.get('/fecha', empleadosController.getEmpleadosByFechaIngreso);
 
 //Ruta para obtener todos los empleados por id
-router.get('/empleados/:id',empleadosController.getEmpleadoById)
+router.get('/:id',empleadosController.getEmpleadoById)
 
 
 //Ruta para actualizar empleados multiples
-router.put('/empleados/updateMultipleEmpleados',upload.single('image'),empleadosController.updateMultipleEmpleados)
+router.put('/updateMultipleEmpleados',upload.single('image'),empleadosController.updateMultipleEmpleados)
 
 
 //Ruta para actualizar el empleado 
-router.put('/empleados/:id',empleadosController.updateEmpleado)
+router.put('/:id',empleadosController.updateEmpleado)
 
 //Ruta para agregar un empleado
 
-router.post('/empleados',
+router.post('/',
 authenticateToken,
 empleadosController.checkUserExists,
 checkModuleAccess(['rrhh','administracion']),
@@ -48,17 +48,17 @@ empleadosController.addEmpleado)
 
 
 //Ruta para agregar multiples empleados
-router.post('/empleados/addMultipleEmpleados',upload.single('image'),authenticateToken,checkPermissions('create'),empleadosController.addMultipleEmpleados)
+router.post('/addMultipleEmpleados',upload.single('image'),authenticateToken,checkPermissions('create'),empleadosController.addMultipleEmpleados)
 
 //Ruta para eliminar multiples empleados
-router.post('/empleados/deleteMultipleEmpleados',empleadosController.deleteMultipleEmpleados);
+router.post('/deleteMultipleEmpleados',empleadosController.deleteMultipleEmpleados);
 
 //Ruta  para eliminar un empleado
 
-router.delete('/empleados/:id',empleadosController.deleteEmpleado);
+router.delete('/:id',empleadosController.deleteEmpleado);
 
 //Ruta para cambiar el estatus del trabajador
 
-router.patch('/empleados/:id/estatus',empleadosController.statusEmpleado)
+router.patch('/:id/estatus',empleadosController.statusEmpleado)
 
 export default router;
