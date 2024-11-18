@@ -43,5 +43,35 @@ static createNoticias= async (noticias)=>{
     return result;
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+
+static eliminarNoticia= async (id)=>{
+
+    const sql = `DELETE FROM noticias WHERE id_noticia=?`
+    const result = await query(sql,[id])
+    return result;
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+   static  updateNoticia= async (id, updateFields, values)=>{
+
+        //construir la parte de SET para la consulta , añadiendo un signo de interrogacion para cada campo
+        const setClause= updateFields.map(field => `${field} = ? `).join(', '); 
+   
+       // Construir la consulta SQL
+       const query = `UPDATE noticias SET ${setClause} WHERE id_noticia = ?`;
+   
+       // Añadir el ID al final de los valores
+       const finalValues = values.concat(id);
+   
+       // Ejecutar la consulta
+       const results = await query(query, finalValues);
+   
+       return results; // Retornar el resultado de la consulta
+   }
+
+
 }
 export default noticiasModel;
