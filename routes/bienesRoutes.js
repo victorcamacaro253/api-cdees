@@ -6,32 +6,32 @@ const router = Router();
 
 
 //Ruta para obtener bienes por departamento
-router.get('/bienes/departamento/',bienesController.getBienesByDepartamento)
+router.get('/departamento/',bienesController.getBienesByDepartamento)
 
 //Ruta para obtener los bienes 
-router.get('/bienes',bienesController.getBienes)
+router.get('/',bienesController.getBienes)
 
 
 //Ruta para obtener los bienes que estan activos
-router.get('/bienes/estatus',bienesController.getBienesActivo);
+router.get('/estatus',bienesController.getBienesActivo);
 
 //Ruta para obtener los bienes por id
-router.get('/bienes/:id',bienesController.getBienesById)
+router.get('/:id',bienesController.getBienesById)
 
 //Ruta para actualizar bienes 
-router.put('/bienes/:id',bienesController.updateBienes)
+router.put('/:id',bienesController.updateBienes)
 
 //Ruta para cambiar el estatus del bien
-router.put('/bienes/cambiar/:id',bienesController.cambiarStatusBien);
+router.put('/cambiar/:id',bienesController.cambiarStatusBien);
 
 //Ruta para agregar multiples bienes
-router.post('/bienes',bienesController.addMultipleBienes) 
+router.post('/',bienesController.addMultipleBienes) 
 
 //Ruta para eliminar multiples bienes
-router.post('/bienes/deleteMultipleBienes',bienesController.deleteMultipleBienes);
+router.post('/deleteMultipleBienes',bienesController.deleteMultipleBienes);
 
 //Ruta para eliminar un bien 
-router.delete('/bienes/:id',bienesController.deleteBien);
+router.delete('/:id',bienesController.deleteBien);
 
 
 export default router
