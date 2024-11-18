@@ -23,6 +23,8 @@ router.post('/v2/', upload.fields([
 
 //router.post('/',upload.array('image'),noticiasController.createNoticia)
 
-//router.delete('/:id',noticiasController.deleteNoticias)
+router.delete('/:id',noticiasController.deleteNoticia)
+
+router.put('/:id',upload.single('image'),noticiasController.updateNoticia)
 
 export default router;
