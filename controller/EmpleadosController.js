@@ -129,9 +129,9 @@ static  updateEmpleado= async (req,res) =>{
     const {Primer_nombre,Segundo_nombre,Primer_apellido,Segundo_apellido,cedula,direccion }= req.body
 
     
-  if (!id || isNaN(id)) {
-    return res.status(400).json({ error: 'ID de usuario inválido' });
-  }
+    if (!id || isNaN(id)) {
+        return res.status(400).json({ error: 'ID de usuario inválido' });
+    }
 
   /*  if (!Primer_nombre || !Segundo_nombre || !Primer_apellido || !Segundo_apellido || !cedula || !direccion  ) {
         return res.status(400).json({ error: 'No hay datos para actualizar' });

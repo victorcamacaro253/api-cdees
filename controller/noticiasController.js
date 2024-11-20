@@ -26,12 +26,21 @@ static getNoticias = async (req, res) => {
 static getNoticiaById= async (req, res) => {
     const {id} = req.params;
     try {
+
        
         const noticias = await noticiasModel.getNoticiaById(id);
+
+        
 
         if(!noticias){
             return res.status(404).json({message:'Error 404'})
             }
+
+
+      await noticiasModel.agregarVisita(id);
+
+      await noticiasModel.agregarNoticiaVisita(id)
+
             res.json(noticias)
             } catch (error) {
                 console.error(error);
@@ -209,5 +218,160 @@ static updateNoticia = async (req,res) =>{
 
 }
 
-}
+//----------------------------------------------------------------------------------------------------
+
+static cambiarEstatus = async (req, res) => {
+  const {id} = req.params;
+  const {estatus} = req.body;
+  try {
+    const result = await noticiasModel.cambiarEstatus(id, estatus);
+    if(result.length===0){
+      return res.status(404).json({message: 'Noticia no encontrada'})
+    }
+
+    res.status(200).json({ message: 'Estado de la noticia actualizado con exito'})
+
+      } catch (error) {
+        console.error('Error ejecutando la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+        }
+      
+
+      }
+
+//-----------------------------------------------------------------------------------------------------------
+
+      static getNoticiasPorFecha = async (req,res)=>{
+        const {fechaInicio,fechaFin,fecha} = req.query
+
+          // Validar los parámetros
+    if (!fechaFin && !fechaFin && !fecha) {
+      return res.status(400).json({ error: 'Se requiere una fecha o dos fechas para realizar la búsqueda' });
+  }
+
+     try {
+     
+      let results 
+
+      if (fecha) {
+         results = await noticiasModel.getNoticiaPorFecha(fecha);
+        
+      } else if(fechaFin && fechaFin){
+         results = await noticiasModel.getNoticiasPorRangoFecha(fechaInicio,fechaFin);
+        
+
+      }else{
+        return res.status(400).json({ error: 'Se requiere una fecha '})
+      }
+
+
+      const total_noticias= results.length
+      const result= {
+        total_noticias,
+        results
+      }
+
+      res.json(result)
+
+
+     } catch (error) {
+      console.error('Error al obtener noticias:', error);
+      res.status(500).json({ error: 'Error al obtener noticias' });
+     }
+
+      }
+
+ //-------------------------------------------------------------------------------------
+ static getNoticiasPorCategoria = async (req,res)=>{
+  const {nombre} = req.query
+  try {
+    const results = await noticiasModel.getNoticiasPorCategoria(nombre);
+
+  if (results.length===0) {
+    return res.status(404).json({ error: 'No se encontraron noticias con esa categoria'})
+    
+  }
+
+    const total_noticias = results.length
+    const result = {
+      total_noticias,
+      results
+      }
+      res.json(result)
+      } catch (error) {
+        console.error('Error al obtener noticias:', error);
+        res.status(500).json({ error: 'Error al obtener noticias' });
+        }
+
+        }
+
+ //-------------------------------------------------------------------------------------------------------
+ static getNoticiaPorEstatus = async (req,res)=>{
+  const {nombre} = req.query
+  try {
+    const results = await noticiasModel.getNoticiasPorEstatus(nombre)
+
+      if (results.length===0) {
+        return res.status(404).json({ error: 'No se encontraron noticias con ese estatus'})
+          }
+
+          const total_noticias = results.length
+          const result = {
+            total_noticias,
+            results
+            }
+            res.json(result)
+            
+            } catch (error) {
+              console.error('Error al obtener noticias:', error);
+              res.status(500).json({ error: 'Error al obtener noticias' });
+              }
+              
+ }       
+
+
+  static getNoticiasMasVisitados = async (req,res)=>{
+    try {
+      const results = await noticiasModel.getNoticiasMasVisitados()
+      if (results.length===0) {
+        return res.status(404).json({ error: 'No se encontraron noticias con ese estatus'})
+          }
+          const total_noticias = results.length
+          const result = {
+            total_noticias,
+            results
+            }
+            res.json(result)
+            } catch (error) {
+              console.error('Error al obtener noticias:', error);
+              res.status(500).json({ error: 'Error al obtener noticias' });
+              }
+              }
+
+              
+  static getNoticiasMasVistas = async (req,res)=>{
+    try {
+      const results = await noticiasModel.getNoticiasMasvistas()
+      if (results.length===0) {
+        return res.status(404).json({ error: 'No se encontraron noticias con ese estatus'})
+          }
+          const total_noticias = results.length
+          const result = {
+            total_noticias,
+            results
+            }
+            res.json(result)
+            } catch (error) {
+              console.error('Error al obtener noticias:', error);
+              res.status(500).json({ error: 'Error al obtener noticias' });
+              }
+              }
+              
+              
+  }
+
+
+
+
+
 export default noticiasController;
