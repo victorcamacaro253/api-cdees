@@ -1,5 +1,5 @@
 import cargosModel from  '../models/cargosModel.js';
-
+import handleError from '../utils/handleErrors.js';
 
 
 class cargosControllers  { 
@@ -10,9 +10,10 @@ static getCargos = async (req,res)=>{
         const cargos = await cargosModel.getCargos();
         res.json(cargos);
         } catch (error) {
-            res.status(500).json({message: error.message})
+            handleError(res,error)
             console.log(error)
-            }
+
+       }
 }
 
 
@@ -32,7 +33,7 @@ static getCargoById= async  (req,res)=>{
 
         res.json(cargo);
         } catch (error) {
-            res.status(500).json({message: error.message})
+            handleError(res,error)
             console.log(error)
             }
 
@@ -60,7 +61,7 @@ static getCargoById= async  (req,res)=>{
             const newCargo = await cargosModel.createCargo(cargo,tipo);
             res.json({message:'Cargo creado exitosamente'});
             } catch (error) {
-                res.status(500).json({message: error.message})
+                handleError(res,error)
                 console.log(error)
                 }
                 }
@@ -101,7 +102,7 @@ static getCargoById= async  (req,res)=>{
                   const update= await cargosModel.updateUser(id,updateFields,values)
 
                     } catch (error){
-                        res.status(500).json({message: error.message})
+                        handleError(res,error)
     
                     }
 
@@ -115,7 +116,8 @@ static getCargoById= async  (req,res)=>{
                         const deleteCargo = await cargosModel.deleteCargo(id)
                         res.status(200).json({ message: "Cargo deleted successfully" });
                         } catch (error) {
-                            res.status(500).json({ message: error.message });
+                            handleError(res,error)
+
                             }
                          }
 
@@ -137,7 +139,7 @@ static getCargoByName= async  (req, res) => {
         
         res.status(200).json(getCargoByName)
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            handleError(res,error)
             }
             }
 
@@ -185,7 +187,7 @@ static getCargoByName= async  (req, res) => {
             }
           
             } catch (error) {
-                res.status(500).json({ message: error.message });
+                handleError(res,error)
                 }
 
 
@@ -213,7 +215,7 @@ static getCargoByName= async  (req, res) => {
                 res.json({message: 'Cargos eliminados con exito'})
             } catch (error) {
                 console.log(error);
-                res.status(500).json({ message: error.message });
+                handleError(res,error)
 
                 
             }
@@ -241,7 +243,7 @@ static getCargoByName= async  (req, res) => {
                 res.json(data)
                 } catch (error) {
                     console.log(error);
-                    res.status(500).json({ message: error.message });
+                    handleError(res,error)
                     }
                     }
 
@@ -271,7 +273,7 @@ static getEstadisticas = async (req,res)=>{
         
             }catch(error){
                 console.log(error)
-                return res.status(500).json({message: error.message})
+                handleError(res,error)
             }
         
 

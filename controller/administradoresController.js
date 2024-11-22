@@ -4,6 +4,7 @@ import pkg from 'jsonwebtoken';
 import {randomBytes} from 'crypto';
 const { sign } = pkg;
 import administradoresModel from '../models/administradoresModel.js'
+import handleError from '../utils/handleErrors.js';
 
 
 class  administradoresController {
@@ -18,7 +19,7 @@ static getAllAdministradores = async (req,res) =>{
 
     }catch(error){
         console.error('Error ejecutando la consulta:', error);
-        res.status(500).json({ error: 'Error interno del servidor 1' });
+        handleError(res,error)
     }
 }
 
@@ -88,7 +89,7 @@ static login= async (req,res)=>{
 
      }catch(error){
         console.error('Error ejecutando la consulta:', error);
-        res.status(500).json({ error: 'Error interno del servidor 1' });
+        handleError(res,error)
      }
 
 }
@@ -117,7 +118,7 @@ static addAdministrador= async  (req,res) =>{
 
    }catch(error){
     console.error('Error ejecutando la consulta:', error);
-    res.status(500).json({ error: 'Error interno del servidor 1' });
+    handleError(res,error)
    }
 
 }
@@ -138,7 +139,7 @@ static deleteAdministrador = async (req,res) =>{
     
  } catch (error) {
     console.error('Error ejecutando la consulta:', error);
-    res.status(500).json({ error: 'Error interno del servidor ' });
+    handleError(res,error)
  }
 }
 
@@ -178,7 +179,7 @@ static  changePassword = async (req,res) =>{
 
     } catch (error) {
         console.error('Error interno del servidor :', error);
-        return res.status(500).json({error:'Error del servidor'})
+        handleError(res,error)
 
     }
 
@@ -211,7 +212,7 @@ static getAdmModules= async (req,res)=>{
         
     } catch (error) {
         console.error('Error interno del servidor :', error);
-        return res.status(500).json({error:'Error del servidor'})
+        handleError(res,error)
     }
 
 
@@ -247,7 +248,7 @@ return res.status(200).json( {message:'Modulos y permisos asignados correctament
 
 }catch(error){
  console.error('Error interno del servidor :', error);
- return  res.status(500).json({error:'Error al asignar  modulos y permisos'})
+ handleError(res,error)
 
 
 }
@@ -284,7 +285,7 @@ static deleteModulosPermisos= async (req,res)=>{
 
     }catch(error){
         console.error('Error interno del servidor :', error);
-        return res.status(500).json({error:'Error al eliminar modulos y permisos'})
+        handleError(res,error)
     }
 }
 

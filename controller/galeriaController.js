@@ -1,4 +1,5 @@
 import galeriaModel from "../models/galeriaModel.js";
+import handleError from "../utils/handleErrors.js";
 
 class galeriaController {
 
@@ -13,7 +14,7 @@ class galeriaController {
             res.json(result)
 
         } catch (error) {
-            return res.status(500).json({message:`Error interno del servidor`,error})
+            handleError(res,error)
         }
     }
 
@@ -29,7 +30,7 @@ class galeriaController {
          res.status(200).json(result)
             
         } catch (error) {
-            return res.status(500).json({message:'Error interno del servidor'})
+            handleError(res,error)
         }
     }
 

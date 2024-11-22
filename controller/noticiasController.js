@@ -16,8 +16,7 @@ static getNoticias = async (req, res) => {
     res.json(noticias)
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error al obtener noticias' });
-    
+    handleError(res,error)    
   }
 
 }
@@ -44,8 +43,8 @@ static getNoticiaById= async (req, res) => {
             res.json(noticias)
             } catch (error) {
                 console.error(error);
-                res.status(500).json({ message: 'Error al obtener noticias' });
-                }
+                handleError(res,error)             
+                 }
                 }
 
 
@@ -101,8 +100,8 @@ static createNoticias = async (req, res) => {
       return res.status(201).json({ message: 'Noticia creada con éxito', noticiasCreada });
   } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Error interno del servidor', error });
-  }
+      handleError(res,error) 
+     }
 };
 
 
@@ -139,7 +138,7 @@ const message = `Noticia creada con éxito`
 
 }catch(error){
   console.error(error);
-  return res.status(500).json({message:'Error interno del servidor ',error});
+  handleError(res,error)
 }
 
 }
@@ -160,7 +159,7 @@ static deleteNoticia = async (req, res) => {
     res.status(200).json({message:'Noticia Eliminada con exito'})
     
   } catch (error) {
-    return res.status(500).json({message:'Error interno del servidor'})
+    handleError(res,error)
     
   }
 }
@@ -213,7 +212,7 @@ static updateNoticia = async (req,res) =>{
     
   } catch (error) {
     console.error('Error ejecutando la consulta:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    handleError(res,error)
   }
 
 }
@@ -233,7 +232,7 @@ static cambiarEstatus = async (req, res) => {
 
       } catch (error) {
         console.error('Error ejecutando la consulta:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        handleError(res,error)
         }
       
 
@@ -276,7 +275,7 @@ static cambiarEstatus = async (req, res) => {
 
      } catch (error) {
       console.error('Error al obtener noticias:', error);
-      res.status(500).json({ error: 'Error al obtener noticias' });
+      handleError(res,error)
      }
 
       }
@@ -300,7 +299,7 @@ static cambiarEstatus = async (req, res) => {
       res.json(result)
       } catch (error) {
         console.error('Error al obtener noticias:', error);
-        res.status(500).json({ error: 'Error al obtener noticias' });
+        handleError(res,error)      
         }
 
         }
@@ -324,7 +323,7 @@ static cambiarEstatus = async (req, res) => {
             
             } catch (error) {
               console.error('Error al obtener noticias:', error);
-              res.status(500).json({ error: 'Error al obtener noticias' });
+              handleError(res,error)
               }
               
  }       
@@ -344,7 +343,7 @@ static cambiarEstatus = async (req, res) => {
             res.json(result)
             } catch (error) {
               console.error('Error al obtener noticias:', error);
-              res.status(500).json({ error: 'Error al obtener noticias' });
+              handleError(res,error)
               }
               }
 
@@ -363,7 +362,7 @@ static cambiarEstatus = async (req, res) => {
             res.json(result)
             } catch (error) {
               console.error('Error al obtener noticias:', error);
-              res.status(500).json({ error: 'Error al obtener noticias' });
+              handleError(res,error)
               }
               }
               

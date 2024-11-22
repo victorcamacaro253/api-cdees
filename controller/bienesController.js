@@ -1,6 +1,6 @@
 import { query as _query, pool } from '../db/db.js'
 import bienesModel from '../models/bienesModel.js'
-
+import handleError from '../utils/handleErrors.js';
 
 class bienesController{
 
@@ -17,9 +17,9 @@ static getBienes = async (req, res) => {
 
         res.json(results);
 
-    } catch (err) {
-        console.error('Error ejecutando la consulta:', err);
-        res.status(500).json({ error: 'Error interno del servidor 1' });
+    } catch (error) {
+        console.error('Error ejecutando la consulta:', error);
+        handleError(res,error)
     }
 };
 
@@ -41,7 +41,7 @@ static getBienesById = async (req, res) => {
 
     }catch(error){
         console.error('Error ejecutando la consulta:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        handleError(res,error)
 
     }
 }
@@ -64,7 +64,7 @@ static getBienesById = async (req, res) => {
 
         }catch(error){
             console.error('Error ejecutando la consulta:', error);
-            res.status(500).json({ error: 'Error interno del servidor' });
+            handleError(res,error)
         }
 
      }
@@ -143,7 +143,7 @@ static getBienesById = async (req, res) => {
 
 } catch (error) {
     console.error('Error ejecutando la consulta:', error);
-    res.status(500).json({ error: 'Error interno del servidor 1' });
+    handleError(res,error)
 }
 
 }
@@ -156,7 +156,7 @@ static getBienesActivo =  async (req, res) => {
 
     } catch(error){
         console.error('Error ejecutando la consulta:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        handleError(res,error)
     }
 }
 
@@ -172,7 +172,7 @@ static cambiarStatusBien= async (req,res)=>{
 
    } catch (error) {
     console.error('Error ejecutando la consulta:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    handleError(res,error)
    }
 }
 
@@ -192,7 +192,7 @@ try {
 
 } catch (error) {
     console.error('Error ejecutando la consulta:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    handleError(res,error)
 }
 
 }
@@ -266,7 +266,7 @@ try {
 
     }catch(error){
         console.error('Error ejecutando la consulta:', error);
-        res.status(500).json({ error: 'Error interno del servidor ' });
+        handleError(res,error)
     }
   }
 
@@ -290,7 +290,7 @@ try {
     res.json({message:'Bienes eliminado con exito'})
 
     } catch (error) {
-        res.status(500).json({error:'Error interno en el servidor'},error)
+        handleError(res,error)
 
     }
 
