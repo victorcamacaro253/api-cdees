@@ -1,6 +1,4 @@
-import { update } from 'firebase/database';
 import { query as _query,pool } from '../db/db.js';
-import { updatePassword } from 'firebase/auth';
 
 const administradoresModel={
 

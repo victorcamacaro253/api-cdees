@@ -72,6 +72,95 @@ static eliminarNoticia= async (id)=>{
        return results; // Retornar el resultado de la consulta
    }
 
+   //-----------------------------------------------------------------------------------------------------
+
+   static cambiarEstatus = async (id, status) => {
+
+    const sql = `UPDATE noticias SET estatus = ? WHERE id_noticia = ?`;
+
+    const result = await query(sql, [status, id]);
+
+    return result;
+
+    }
+
+//------------------------------------------------------------------------------------------------------------
+
+
+    static getNoticiaPorFecha =async (fecha)=>{
+
+        const sql = `SELECT * FROM noticias WHERE fecha_noticia = ? ORDER BY id_noticia`
+
+        const result = await query(sql,[fecha])
+
+        return result;
+    }
+
+    //---------------------------------------------------------------------------------------------------------
+
+    static getNoticiasPorRangoFecha = async (fechaInicio, fechaFin) => {
+
+        const sql = `SELECT * FROM noticias WHERE fecha_noticia BETWEEN ? AND ? ORDER BY id_noticia`
+
+        const result = await query(sql, [fechaInicio, fechaFin])
+
+        return result;
+        }
+
+ //-----------------------------------------------------------------------------------------------------
+
+ static getNoticiasPorCategoria = async (categoria) => {
+    const sql = `SELECT * FROM noticias WHERE categoria_noticia = ? ORDER BY id_noticia`
+    const result = await query(sql, [categoria])
+    return result;
+    }
+
+
+//------------------------------------------------------------------------------------------------------
+
+static getNoticiasPorEstatus = async (estatus) => {
+    const sql = `SELECT * FROM noticias WHERE estatus = ? ORDER BY id_noticia`
+    const result = await query(sql, [estatus])
+    return result;
+    }
+
+//-----------------------------------------------------------------------------------------------------------
+
+static getNoticiasMasVisitados = async()=>{
+    const sql = `SELECT n.titulo_noticia, COUNT(v.id) AS Visitas FROM noticias n 
+                 LEFT JOIN noticiasvisitas v ON n.id_noticia = v.noticia_Id 
+                 GROUP BY n.id_noticia;`
+    const result = await query(sql,[])
+    return result;
+}
+
+//-----------------------------------------------------------------------------------------------------------
+
+static getNoticiasMasvistas = async()=>{
+const sql = `SELECT titulo_noticia,visitas FROM noticias ORDER BY visitas DESC`
+const result = await query(sql,[])
+return result;
+
+}
+
+
+
+//------------------------------------------------------------------------------------------------------------
+
+static agregarVisita = async (idNoticia)=>{
+    const sql=`UPDATE noticias SET visitas = visitas + 1 WHERE id_noticia = ?`
+    const result = await query(sql, [idNoticia])
+    return result;
+}
+
+//---------------------------------------------------------------------------------------------------------
+
+
+static agregarNoticiaVisita = async (idNoticia)=>{
+const sql= `INSERT INTO noticiasvisitas (noticia_id) VALUES (?)`
+const result = await query(sql, [idNoticia])
+return result;
+}
 
 }
 export default noticiasModel;
